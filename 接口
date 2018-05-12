@@ -1,0 +1,74 @@
+package printer;
+
+class CanonPrinter implements Printer{
+    public void open(){
+        System.out.println("佳能开机");
+    }
+
+    public void print(String s){
+        System.out.println("Canon print-----" + s);
+    }
+
+    public void close(){
+        System.out.println("佳能关机");
+    }
+}
+
+package printer;
+
+class HPPrinter implements Printer{
+    public void open(){
+        System.out.println("惠普开机");
+    }
+
+    public void print(String s){
+        System.out.println("HP print-----" + s);
+    }
+
+    public void close(){
+        System.out.println("惠普关机");
+    }
+}
+
+package printer;
+
+interface Printer {
+    public void open();
+
+    public void print(String s);
+
+    public void close();
+}
+
+package printer;
+
+public class PrinterFactory {
+    public static Printer getPrinter(int flag){
+        Printer printer = null;
+        if(flag == 1){
+            printer = new CanonPrinter();
+        }
+        else if(flag == 0){
+            printer = new HPPrinter();
+        }
+        return printer;
+    }
+}
+
+package printer;
+
+import java.util.Scanner;
+
+public class Test {
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        int flag;
+        flag = input.nextInt();
+        Printer printer = PrinterFactory.getPrinter(flag);
+
+        printer.open();
+        printer.print("zhangxinyun");
+        printer.close();
+
+    }
+}
