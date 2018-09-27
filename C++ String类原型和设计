@@ -1,0 +1,365 @@
+#include<iostream>
+using namespace std;
+
+class String{
+private:
+	char* str;
+public:
+	String(const char* string = NULL){                                                        
+		int size = 0;                     
+		if (string == NULL){                
+			str = new char[1];
+			str[0] = '\0';
+		}
+		else{
+			size = strlen(string);
+			str = new char[size + 1];
+		}
+		strcpy_s(str, size+1,string);
+	}
+	
+	~String(){
+		delete str;
+	}
+	//��ȡ�ַ�ָ��
+	char* getStr(){
+		return str;
+	}
+	
+	String(String& other){
+		int size = other.getLength() + 1;
+		str = new char[size];
+		for (int i = 0; i < size; i++)
+			str[i] = other.getStr()[i];
+
+	}
+	
+	String operator= (String& other){
+		if (str == other.getStr()){
+			return other;
+		}
+		else{
+			delete str;
+			char* str = other.getStr();
+		}
+		return String(str);
+	}
+	
+	String& assign(const char* s){
+		char* newStr = new char[strlen(s) + 1];
+		for (int i = 0; i < strlen(s); i++){
+			newStr[i] = s[i];
+		}
+		str = newStr;
+		return String(str);
+	}
+	
+	String& assign(int n, char c){
+		for (int i = 0; i < n; i++){
+			str[i] = c;
+		}
+		return String(str);
+	}
+
+	String& operator+=(String& s){
+		int size = this->getLength() + s.getLength() + 1;
+		char* newStr = new char[size];
+		for (int i = 0; i < this->getLength(); i++)
+			newStr[i] = str[i];
+		int j = 0;
+		for (int i = this->getLength(); i < size; i++){
+			newStr[i] = s.getStr()[j];
+			j++;
+		}
+
+	}
+
+	void operator<<(const char* s){
+		cout << s << endl;
+	}
+
+	void operator>>(char* s){
+		cin >> s;
+	}
+
+	String& append(char* s){
+		int size = this->getLength() + strlen(s);
+		char* newStr = new char[size + 1];
+		for (int i = 0; i < this->getLength(); i++)
+			newStr[i] = str[i];
+		int j = 0;
+		for (int i = this->getLength(); i < size + 1; i++){
+			newStr[i] = s[j];
+			j++;
+		}
+		str = newStr;
+		return String(str);
+	}
+	
+	static int compare(String strA, String strB){
+		if (strA.getLength() <= strB.getLength()){
+			for (int i = 0; i < strA.getLength(); i++){
+				if (strA.getStr()[i] < strB.getStr()[i])
+					return -1;
+				else if (strA.getStr()[i] > strB.getStr()[i])
+					return 1;
+			}
+			return 0;
+		}
+		else{
+			for (int i = 0; i < strB.getLength(); i++){
+				if (strA.getStr()[i] < strB.getStr()[i])
+					return -1;
+				else if (strA.getStr()[i] > strB.getStr()[i])
+					return 1;
+			}
+			return 0;
+		}
+	}
+	
+	static int compare(String strA, String strB, bool ignoreCase){
+		if (ignoreCase == true){
+			for (int i = 0; i < strA.getLength(); i++){
+				if (strA.getStr()[i] >= 'A' && strA.getStr()[i] <= 'Z'){
+					strA.getStr()[i] += 32;
+				}
+			}
+
+			for (int i = 0; i < strB.getLength(); i++){
+				if (strB.getStr()[i] >= 'A' && strB.getStr()[i] <= 'Z'){
+					strB.getStr()[i] += 32;
+				}
+			}
+		}
+
+		if (strA.getLength() <= strB.getLength()){
+			for (int i = 0; i < strA.getLength(); i++){
+				if (strA.getStr()[i] < strB.getStr()[i])
+					return -1;
+				else if (strA.getStr()[i] > strB.getStr()[i])
+					return 1;
+			}
+			return 0;
+		}
+		else{
+			for (int i = 0; i < strB.getLength(); i++){
+				if (strA.getStr()[i] < strB.getStr()[i])
+					return -1;
+				else if (strA.getStr()[i] > strB.getStr()[i])
+					return 1;
+			}
+			return 0;
+		}
+	}
+	
+	int Indexof(String value){
+		for (int i = 0; i < this->getLength(); i++){
+			int j = i;
+			int k = 0;
+			while (value.getStr()[k] != 0 && value.getStr()[k] == str[j]){
+				j++;
+				k++;
+			}
+			if (value.getStr()[k] == 0){
+				return i + 1;
+			}
+		}
+		return -1;
+	}
+	
+	int Indexof(String value, int startIndex){
+		for (int i = startIndex; i < this->getLength(); i++){
+			int j = i;
+			int k = 0;
+			while (value.getStr()[k] != 0 && value.getStr()[k] == str[j]){
+				j++;
+				k++;
+			}
+			if (value.getStr()[k] == 0){
+				return i + 1;
+			}
+		}
+		return -1;
+	}
+
+	int Indexof(String value, int startIndex, int count){
+		for (int i = startIndex; i < startIndex + count; i++){
+			int j = i;
+			int k = 0;
+			while (value.getStr()[k] != 0 && value.getStr()[k] == str[j]){
+				j++;
+				k++;
+			}
+			if (value.getStr()[k] == 0){
+				return i + 1;
+			}
+		}
+		return -1;
+	}
+	
+	String replace(String oldValue, String newValue){
+		for (int i = 0; i < this->getLength(); i++){
+			int j = i;
+			int k = 0;
+			while (oldValue.getStr()[k] != 0 && oldValue.getStr()[k] == str[j]){
+				j++;
+				k++;
+			}
+			if (oldValue.getStr()[k] == 0){
+				int n = 0;
+				for (int m = i; m < j; m++){
+					str[m] = newValue.getStr()[n];
+					n++;
+				}
+			}
+		}
+		return String(str);
+	}
+	
+	String trim(){
+		char* newStr = new char[this->getLength()];
+		int count = 0;
+		for (int i = 0; i < this->getLength(); i++){
+			if (str[i] != str[i+1]){
+				newStr[count] = str[i];
+				count++;
+			}
+		}
+		newStr[count] = '\0';
+		str = newStr;
+		return String(str);
+	}
+	
+	String trim(String trimString){
+		char* newStr = new char[this->getLength()];
+		int count = 0;
+		for (int i = 0; i < this->getLength(); i++){
+			int j = i;
+			int k = 0;
+			while (trimString.getStr()[k] != 0 && trimString.getStr()[k] == str[j]){
+				j++;
+				k++;
+			}
+			if (trimString.getStr()[k] != 0){
+				newStr[count] = str[i];
+				count++;
+			}
+		}
+		newStr[count + 1] = '\0';
+		str = newStr;
+		return String(str);
+	}
+	
+	String trimStart(String trimString){
+		char* newStr = new char[this->getLength()];
+		int count = 0;
+		for (int i = 0; i < this->getLength(); i++){
+			int j = i;
+			int k = 0;
+			while (trimString.getStr()[k] != 0 && trimString.getStr()[k] == str[j]){
+				j++;
+				k++;
+			}
+			if (trimString.getStr()[k] == 0){
+				str = newStr;
+				return String(str);
+			}
+			else{
+				newStr[count] = str[i];
+				count++;
+			}
+		}
+		str = newStr;
+		return String(str);
+	}
+
+	String trimEnd(String trimString){
+
+	}
+	
+	int getLength(){
+		return strlen(str);
+	}
+
+	int getLength(String value){
+		return value.getLength();
+	}
+	
+	int getLength(String value, String insertString){
+		return value.getLength() + insertString.getLength();
+	}
+	
+	int getLength(String value, String insertString, String trimString){
+		return value.getLength() + insertString.getLength() - trimString.getLength();
+	}
+};
+int main(){
+	String str1("China stocks extend rally on positive policy outlook");
+	String str2("Chinese shares remained in positive territory for the second-consecutive day on Wednesday following the government's fresh fiscal stimulus measures");
+
+	cout << str1.getStr() << endl << str2.getStr() << endl;
+	cout << "str1�ĳ���" << str1.getLength() << endl;
+	cout << "str2�ĳ���" << str2.getLength() << endl;
+
+	str1.append(str2.getStr());
+	cout << str1.getStr() << endl;
+	cout << "str1�ĳ���" << str1.getLength() << endl;
+
+	cout << "��ѯChina�������ַ����е�����������" << endl;
+	cout << str1.Indexof("China") << endl;
+	cout << "��ѯChinese�������ַ����е�����������" << endl;
+	cout << str1.Indexof("Chinese") << endl;
+
+	cout << "��ѯChina��Chinese�������ַ���������40��ʼ�Ľ�����" << endl;
+	cout << str1.Indexof("China", 40) << "  " << str1.Indexof("Chinese", 40) << endl;
+
+	cout << "��ѯday�������ַ���������35��ʼ������60�Ľ�����" << endl;
+	cout << str2.Indexof("day", 35, 25) << endl;
+
+	cout << "�����ַ����е�positiveȫ���滻Ϊnegative����ȡ�ַ������ȡ�" << endl;
+	str1.replace("positive", "negative");
+	cout << str1.getStr() << endl;
+
+	cout << "�Ա�Hello World��HELLO WORLD�����ؽ���" << endl;
+	cout << String::compare("Hello World", "HELLO WORLD") << endl;
+	cout << "�Ա�Hello World��HELLO WORLD�����Դ�Сд�󷵻ؽ���" << endl;
+	cout << String::compare("Hello World", "HELLO WORLD", true) << endl;
+
+	cout << "�����ַ����е�oȥ��" << endl;
+	str1.trim("o");
+	cout << str1.getStr() << endl;
+
+	cout << "�ո�ȫ��ȥ������ȡ�ַ������ȣ���ΪCentral bank defends measures taken to regulate forex market" << endl;
+	String str3("  CCCentral bank defends measures taken to regulate forex markettt  ");
+	cout << str3.getLength() << endl;
+	cout << "str3�ĳ���Ϊ" << str3.getLength() << endl;
+	str3.trim(" ");
+	cout << str3.getStr() << endl;
+	cout << "str3�ĳ���Ϊ" << str3.getLength() << endl;
+	str3.trim();
+	cout << str3.getStr() << endl;
+	cout << endl << endl << endl;
+
+	char* inputStr = new char;
+	cout << "������һ��Ӣ���ı�" << endl;
+	cin >> inputStr;
+	String inStr(inputStr);
+	cout << "�������ı�Ϊ" << endl;
+	cout << inStr.getStr() << endl;
+	cout << "ȥ���ո�����" << endl;
+	inStr.trim(" ");
+	cout << inStr.getStr() << endl;
+	cout << "����Ϊ" << inStr.getLength() << endl;
+
+	cout << "����Ҫ���ҵĵ���" << endl;
+	char* findStr = new char;
+	cin >> findStr;
+	cout << inStr.Indexof(findStr) << endl;
+	char* replace = new char;
+	cout << "����Ҫ�滻�ĵ���" << endl;
+	cin >> replace;
+	String replaceStr(replace);
+	inStr.replace(findStr, replaceStr);
+	cout << inStr.getStr() << endl;
+	system("pause");
+}
