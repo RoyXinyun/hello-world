@@ -21,7 +21,7 @@ public:
 	~String(){
 		delete str;
 	}
-	//��ȡ�ַ�ָ��
+	
 	char* getStr(){
 		return str;
 	}
@@ -293,6 +293,7 @@ public:
 		return value.getLength() + insertString.getLength() - trimString.getLength();
 	}
 };
+//测试函数
 int main(){
 	String str1("China stocks extend rally on positive policy outlook");
 	String str2("Chinese shares remained in positive territory for the second-consecutive day on Wednesday following the government's fresh fiscal stimulus measures");
